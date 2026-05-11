@@ -1,5 +1,27 @@
 # astro
 
+## 6.3.2
+
+### Patch Changes
+
+- [#16675](https://github.com/withastro/astro/pull/16675) [`11d4592`](https://github.com/withastro/astro/commit/11d4592e9498e900b433ba94abed9cd615a9350b) Thanks [@ascorbic](https://github.com/ascorbic)! - Fixes a regression where `Astro.cache` was `undefined` when `experimental.cache` was not configured.
+
+  The previous documented behavior is for `Astro.cache` to always be defined as a no-op shim: `cache.set()` warns once, `cache.invalidate()` throws and `cache.enabled` can be used to gate. This allows library and user code can call cache methods without conditional checks. The cache provider registration was being gated at the call site on `experimental.cache` being configured, which meant the disabled shim branch inside the provider was unreachable and the `Astro.cache` getter was never attached to the context.
+
+- [#16691](https://github.com/withastro/astro/pull/16691) [`0f0a4ce`](https://github.com/withastro/astro/commit/0f0a4ce1b28a6d6ec1658c7f59e0e68408935135) Thanks [@matthewp](https://github.com/matthewp)! - Fixes `HTMLElement is not defined` error during HMR when using components with client-side scripts (e.g. Starlight `<Tabs>`) and the Cloudflare adapter
+
+- [#16562](https://github.com/withastro/astro/pull/16562) [`07529ec`](https://github.com/withastro/astro/commit/07529eccdaef8727a375475e6d04071b770114a1) Thanks [@matthewp](https://github.com/matthewp)! - Fixes non-prerendered routes failing when a dynamic prerendered route exists in the same project with `prerenderEnvironment: 'node'`
+
+- [#16638](https://github.com/withastro/astro/pull/16638) [`272185b`](https://github.com/withastro/astro/commit/272185bcccf6a4adcd7575f319bf91f2e5306c6d) Thanks [@ematipico](https://github.com/ematipico)! - Fixes a bug where the Astro compiler wasn't freed at the end of the build. After the fix, the memory used by the compiler is now correctly freed at the end of the build.
+
+- [#16544](https://github.com/withastro/astro/pull/16544) [`d365c97`](https://github.com/withastro/astro/commit/d365c975ba2d88fc1dbdfe698df2bf9e2eafadce) Thanks [@matthewp](https://github.com/matthewp)! - Tightens `isRemotePath()` to reject control characters after a leading slash and fixes the dev image endpoint origin check
+
+- [#16556](https://github.com/withastro/astro/pull/16556) [`f38dec7`](https://github.com/withastro/astro/commit/f38dec76a48234ae6919a118f3d626c6ed3d4e80) Thanks [@matthewp](https://github.com/matthewp)! - Rejects double-encoded URL paths with a 400 response instead of silently falling back to partial decoding
+
+- Updated dependencies [[`d365c97`](https://github.com/withastro/astro/commit/d365c975ba2d88fc1dbdfe698df2bf9e2eafadce), [`9256345`](https://github.com/withastro/astro/commit/92563452ce866d9f9b950ad4b2adc808d10e8014)]:
+  - @astrojs/internal-helpers@0.9.1
+  - @astrojs/markdown-remark@7.1.2
+
 ## 6.3.1
 
 ### Patch Changes

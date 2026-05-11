@@ -1,5 +1,19 @@
 # @astrojs/cloudflare
 
+## 13.5.1
+
+### Patch Changes
+
+- [#16652](https://github.com/withastro/astro/pull/16652) [`98c32cc`](https://github.com/withastro/astro/commit/98c32ccdc7761bb1fad56533535866a10582c4e9) Thanks [@greatjourney589](https://github.com/greatjourney589)! - Fixes user-declared KV namespace bindings being duplicated in the generated `dist/server/wrangler.json`, which caused wrangler validation to fail with "<binding> assigned to multiple KV Namespace bindings." The Astro Cloudflare config customizer now returns only the auto-injected `SESSION` binding and lets `@cloudflare/vite-plugin` merge it with the user's wrangler config, instead of pre-merging the user's bindings into the output.
+
+- [#16272](https://github.com/withastro/astro/pull/16272) [`4f9521e`](https://github.com/withastro/astro/commit/4f9521eeb0e20865f3a74c41a4ec99758127b902) Thanks [@barry3406](https://github.com/barry3406)! - Fixes `.astro` files failing with `No matching export in "html:..." for import "default"` when default-imported from a `.ts` file
+
+- [#15723](https://github.com/withastro/astro/pull/15723) [`9256345`](https://github.com/withastro/astro/commit/92563452ce866d9f9b950ad4b2adc808d10e8014) Thanks [@rururux](https://github.com/rururux)! - Fixes an issue where the `<Prism />` component failed to work in Cloudflare Workers.
+
+- Updated dependencies [[`d365c97`](https://github.com/withastro/astro/commit/d365c975ba2d88fc1dbdfe698df2bf9e2eafadce)]:
+  - @astrojs/internal-helpers@0.9.1
+  - @astrojs/underscore-redirects@1.0.3
+
 ## 13.5.0
 
 ### Minor Changes
