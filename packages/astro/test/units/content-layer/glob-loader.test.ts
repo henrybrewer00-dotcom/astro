@@ -76,7 +76,7 @@ describe('Glob Loader', () => {
 		await contentLayer.sync();
 
 		const entries = store.values('probes');
-		assert.equal(entries.length, 6);
+		assert.equal(entries.length, 7);
 
 		// Verify voyager probes are excluded
 		assert.ok(entries.every((e) => !e.id.startsWith('voyager')));
@@ -84,6 +84,9 @@ describe('Glob Loader', () => {
 		// Check that other probes exist
 		const cassini = entries.find((e) => e.id === 'cassini');
 		assert.ok(cassini);
+		// cassini-2.md has slug: cassini in frontmatter, but its ID should be from the file path
+		const cassini2 = entries.find((e) => e.id === 'cassini-2');
+		assert.ok(cassini2);
 	});
 
 	it('retains body by default', async () => {
@@ -347,5 +350,54 @@ describe('Glob Loader', () => {
 		await contentLayer.sync();
 
 		assert.ok(warnings.some((w) => w.includes('No files found matching')));
+	});
+
+	it('does not use data.slug as entry id', async () => {
+		const store = new MutableDataStore();
+		const settings = createMinimalSettings(root, {
+			contentEntryTypes: [createMarkdownEntryType()],
+		});
+		const logger = new AstroLogger({
+			destination: { write: () => true },
+			level: 'silent',
+		});
+
+		const collections = {
+			withSlugs: defineCollection({
+				loader: glob({ pattern: '*.md', base: 'src/content/with-slugs' }),
+			}),
+		};
+
+		const contentLayer = new ContentLayer({
+			settings,
+			logger,
+			store,
+			contentConfigObserver: createTestConfigObserver(collections),
+		});
+
+		await contentLayer.sync();
+
+		const entries = store.values('withSlugs');
+		assert.equal(entries.length, 2);
+
+		const ids = entries.map((e) => e.id).sort();
+		// IDs should always be derived from file path, not from data.slug
+		assert.deepEqual(ids, ['post-one', 'post-two']);
+
+		// Verify that the entry with slug in frontmatter has its ID from the file path, NOT from data.slug
+		const postOne = entries.find((e) => e.id === 'post-one');
+		assert.ok(
+			postOne,
+			'Entry should be found by file-path-based ID "post-one", not by slug "custom-slug-one"',
+		);
+		assert.equal(
+			postOne.data.slug,
+			'custom-slug-one',
+			'data.slug should still contain the frontmatter value',
+		);
+
+		// Verify that an entry without slug also works correctly
+		const postTwo = entries.find((e) => e.id === 'post-two');
+		assert.ok(postTwo, 'Entry without slug should have file-path-based ID "post-two"');
 	});
 });
